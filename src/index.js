@@ -2,7 +2,6 @@ import fs from "fs";
 import core from "@actions/core";
 import github from "@actions/github";
 import axios from "axios";
-import safeRegex from "safe-regex2";
 
 const ESC = String.fromCharCode(27);
 const c = {
@@ -50,24 +49,8 @@ async function validateSubscription() {
   }
 }
 
-function compilePattern(pattern, field) {
-  if (!safeRegex(pattern)) {
-    throw new Error(
-      `${c.red(`✗ Potentially unsafe regex pattern for ${field} (ReDoS risk):`)} ${pattern}`
-    );
-  }
-  try {
-    return new RegExp(pattern);
-  } catch {
-    throw new Error(
-      `${c.red(`✗ Invalid regex pattern for ${field}:`)} ${pattern}`
-    );
-  }
-}
-
 function checkTitle(titlePattern, titleText) {
-  const re = compilePattern(titlePattern, "pr-title-regex");
-  if (!re.test(titleText)) {
+  if (!new RegExp(titlePattern).test(titleText)) {
     throw new Error(
       [
         c.red("✗ PR title does not satisfy the required format."),
@@ -84,8 +67,7 @@ function checkTitle(titlePattern, titleText) {
 }
 
 function checkBody(bodyPattern, bodyText) {
-  const re = compilePattern(bodyPattern, "pr-body-regex");
-  if (!re.test(bodyText)) {
+  if (!new RegExp(bodyPattern).test(bodyText)) {
     throw new Error(
       [
         c.red("✗ PR body does not satisfy the required format."),
