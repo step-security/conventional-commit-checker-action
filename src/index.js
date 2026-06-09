@@ -1,3 +1,4 @@
+import fs from "fs";
 import core from "@actions/core";
 import github from "@actions/github";
 import axios from 'axios'

@@ -41039,6 +41039,8 @@ __nccwpck_require__.d(common_utils_namespaceObject, {
   origin: () => (origin)
 });
 
+// EXTERNAL MODULE: external "fs"
+var external_fs_ = __nccwpck_require__(9896);
 // EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(7484);
 // EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
@@ -48302,6 +48304,7 @@ axios.default = axios;
 
 
 
+
 const ESC = String.fromCharCode(27);
 const c = {
   red: (s) => `${ESC}[31m${s}${ESC}[0m`,
@@ -48315,8 +48318,8 @@ const DIVIDER = c.dim("─".repeat(88));
 async function validateSubscription() {
   let repoPrivate;
   const eventPath = process.env.GITHUB_EVENT_PATH;
-  if (eventPath && fs.existsSync(eventPath)) {
-    const payload = JSON.parse(fs.readFileSync(eventPath, "utf8"));
+  if (eventPath && external_fs_.existsSync(eventPath)) {
+    const payload = JSON.parse(external_fs_.readFileSync(eventPath, "utf8"));
     repoPrivate = payload?.repository?.private;
   }
   
