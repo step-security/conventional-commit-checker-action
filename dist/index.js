@@ -36314,13 +36314,6 @@ module.exports = {
 
 /***/ }),
 
-/***/ 7784:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)(__nccwpck_require__.ab + "build/Release/re2.node")
-
-/***/ }),
-
 /***/ 75:
 /***/ ((module) => {
 
@@ -36762,54 +36755,6 @@ function qstring(str) {
     throw new TypeError(`Invalid parameter value: ${str}`);
 }
 //# sourceMappingURL=index.js.map
-
-/***/ }),
-
-/***/ 7319:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-// @ts-self-types="./re2.d.ts"
-
-
-const RE2 = __nccwpck_require__(7784);
-// const RE2 = require('./build/Debug/re2.node');
-
-const setAliases = (object, dict) => {
-  for (let [name, alias] of Object.entries(dict)) {
-    Object.defineProperty(
-      object,
-      alias,
-      Object.getOwnPropertyDescriptor(object, name)
-    );
-  }
-};
-
-setAliases(RE2.prototype, {
-  match: Symbol.match,
-  search: Symbol.search,
-  replace: Symbol.replace,
-  split: Symbol.split
-});
-
-RE2.prototype[Symbol.matchAll] = function* (str) {
-  if (!this.global)
-    throw TypeError(
-      'String.prototype.matchAll() is called with a non-global RE2 argument'
-    );
-
-  const re = new RE2(this);
-  re.lastIndex = this.lastIndex;
-  for (;;) {
-    const result = re.exec(str);
-    if (!result) break;
-    if (result[0] === '') ++re.lastIndex;
-    yield result;
-  }
-};
-
-module.exports = RE2;
-module.exports.RE2 = RE2;
-
 
 /***/ }),
 
@@ -48354,10 +48299,7 @@ axios.default = axios;
 // this module should only have a default export
 /* harmony default export */ const lib_axios = (axios);
 
-// EXTERNAL MODULE: ./node_modules/re2/re2.js
-var re2 = __nccwpck_require__(7319);
 ;// CONCATENATED MODULE: ./src/index.js
-
 
 
 
@@ -48409,19 +48351,8 @@ async function validateSubscription() {
   }
 }
 
-function compilePattern(pattern, field) {
-  try {
-    return new re2(pattern);
-  } catch {
-    throw new Error(
-      `${c.red(`✗ Invalid regex pattern for ${field}:`)} ${pattern}`
-    );
-  }
-}
-
 function checkTitle(titlePattern, titleText) {
-  const re = compilePattern(titlePattern, "pr-title-regex");
-  if (!re.test(titleText)) {
+  if (!new RegExp(titlePattern).test(titleText)) {
     throw new Error(
       [
         c.red("✗ PR title does not satisfy the required format."),
@@ -48438,8 +48369,7 @@ function checkTitle(titlePattern, titleText) {
 }
 
 function checkBody(bodyPattern, bodyText) {
-  const re = compilePattern(bodyPattern, "pr-body-regex");
-  if (!re.test(bodyText)) {
+  if (!new RegExp(bodyPattern).test(bodyText)) {
     throw new Error(
       [
         c.red("✗ PR body does not satisfy the required format."),
