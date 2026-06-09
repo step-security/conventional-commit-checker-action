@@ -9,13 +9,14 @@
   "keywords": [
     "conventional-commits",
     "github-action"
-],
+  ],
   "type": "module",
   "author": "step-security",
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^2.0.1",
-    "@actions/github": "^8.0.0"
+    "@actions/github": "^8.0.0",
+    "axios": "^1.17.0"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.38.4"
