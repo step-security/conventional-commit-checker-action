@@ -2,7 +2,7 @@ import fs from "fs";
 import core from "@actions/core";
 import github from "@actions/github";
 import axios from "axios";
-import RE2 from "re2";
+import safeRegex from "safe-regex2";
 
 const ESC = String.fromCharCode(27);
 const c = {
@@ -51,8 +51,13 @@ async function validateSubscription() {
 }
 
 function compilePattern(pattern, field) {
+  if (!safeRegex(pattern)) {
+    throw new Error(
+      `${c.red(`✗ Potentially unsafe regex pattern for ${field} (ReDoS risk):`)} ${pattern}`
+    );
+  }
   try {
-    return new RE2(pattern);
+    return new RegExp(pattern);
   } catch {
     throw new Error(
       `${c.red(`✗ Invalid regex pattern for ${field}:`)} ${pattern}`
