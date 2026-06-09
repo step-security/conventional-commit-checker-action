@@ -1,0 +1,28 @@
+name: test
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-for-cc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v5
+
+      - name: Setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build the project
+        run: npm run build
+
+      - name: Action self-test
+        id: test-action
+        uses: ./

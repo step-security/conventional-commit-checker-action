@@ -1,0 +1,16 @@
+name: "conventional-commit-checker-action"
+description: "Enforces Conventional Commits specification on PR titles and bodies"
+
+inputs:
+  pr-body-regex:
+    description: "Custom regex pattern to validate the PR body"
+    required: false
+    default: '(.*\n)+(.*)'
+  pr-title-regex:
+    description: "Custom regex pattern to validate the PR title"
+    required: false
+    default: "^(.+)(?:(([^)s]+)))?: (.+)"
+    
+runs:
+  using: "node24"
+  main: "dist/index.js"

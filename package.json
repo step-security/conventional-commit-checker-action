@@ -1,0 +1,23 @@
+{
+  "name": "conventional-commit-checker-action",
+  "version": "2.0.1",
+  "description": "Enforces Conventional Commits specification on PR titles and bodies",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "ncc build src/index.js -o dist"
+  },
+  "keywords": [
+    "conventional-commits",
+    "github-action"
+],
+  "type": "module",
+  "author": "step-security",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^2.0.1",
+    "@actions/github": "^8.0.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.38.4"
+  }
+}
