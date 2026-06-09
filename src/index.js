@@ -1,7 +1,8 @@
 import fs from "fs";
 import core from "@actions/core";
 import github from "@actions/github";
-import axios from 'axios'
+import axios from "axios";
+import RE2 from "re2";
 
 const ESC = String.fromCharCode(27);
 const c = {
@@ -49,9 +50,19 @@ async function validateSubscription() {
   }
 }
 
+function compilePattern(pattern, field) {
+  try {
+    return new RE2(pattern);
+  } catch {
+    throw new Error(
+      `${c.red(`✗ Invalid regex pattern for ${field}:`)} ${pattern}`
+    );
+  }
+}
+
 function checkTitle(titlePattern, titleText) {
-  const matched = new RegExp(titlePattern).test(titleText);
-  if (!matched) {
+  const re = compilePattern(titlePattern, "pr-title-regex");
+  if (!re.test(titleText)) {
     throw new Error(
       [
         c.red("✗ PR title does not satisfy the required format."),
@@ -68,8 +79,8 @@ function checkTitle(titlePattern, titleText) {
 }
 
 function checkBody(bodyPattern, bodyText) {
-  const matched = new RegExp(bodyPattern).test(bodyText);
-  if (!matched) {
+  const re = compilePattern(bodyPattern, "pr-body-regex");
+  if (!re.test(bodyText)) {
     throw new Error(
       [
         c.red("✗ PR body does not satisfy the required format."),
